@@ -65,7 +65,7 @@
 
  steps:
   # Build the container image
-- name: "gcr.io/images/alaric-365111"
+- name: "gcr.io/images/alaric"
   args: ['build', '-t', 'gcr.io/images/alaric/alaric-365111/myapp:v1', '.']
 #   timeout: 180s
 #       #Push the image
