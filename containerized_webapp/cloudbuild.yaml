@@ -21,3 +21,13 @@
      env: 'PASSWORD'
    - versionName: projects/alaric-365111/secrets/docker-username/versions/1
      env: 'USERNAME'
+     steps:
+- name: "gcr.io/cloud-builders/docker"
+  args:
+  - build
+  - "--tag=gcr.io/alaric-365111/quickstart-image"
+  - "--file=.containerized_webapp/Dockerfile"
+  - .
+...
+images:
+- "gcr.io/alaric365111/quickstart-image"
