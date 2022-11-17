@@ -1,6 +1,6 @@
 
  steps:
- - name: 'gcr.io/Alaric'
+ - name: 'gcr.io/alaric-365111/docker'
    args: ['build', '-t', 'gcr.io/$PROJECT_ID/myapp:v1', '.']
    timeout: 180s
 # #Push the image
