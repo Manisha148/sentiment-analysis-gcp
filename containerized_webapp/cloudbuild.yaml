@@ -9,7 +9,7 @@
    secretEnv: ['USERNAME']
 #  - name: 'gcr.io/cloud-builders/docker'
 #    entrypoint: 'bash'
-#    args: ['-c', 'docker build -t $$USERNAME/test1:22 .']
+#    args: ['-c', 'docker build -t "--file=.containerized_webapp/Dockerfile" .']
 #    secretEnv: ['USERNAME']
 #  - name: 'gcr.io/cloud-builders/docker'
 #    entrypoint: 'bash'
@@ -21,13 +21,13 @@
      env: 'PASSWORD'
    - versionName: projects/alaric-365111/secrets/docker-username/versions/1
      env: 'USERNAME'
-     steps:
-- name: "gcr.io/cloud-builders/docker"
-  args:
-  - build
-  - "--tag=gcr.io/alaric-365111/test"
-  - "--file=.containerized_webapp/Dockerfile"
-  - .
-...
-images:
-- "gcr.io/alaric365111/test"
+#      steps:
+# - name: "gcr.io/cloud-builders/docker"
+#   args:
+#   - build
+#   - "--tag=gcr.io/alaric-365111/test"
+#   - "--file=.containerized_webapp/Dockerfile"
+#   - .
+# ...
+# images:
+# - "gcr.io/alaric365111/test"
