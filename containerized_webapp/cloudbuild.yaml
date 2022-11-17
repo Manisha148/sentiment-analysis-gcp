@@ -1,11 +1,26 @@
 steps:
+#Build the image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '--target', 'test', '--cache-from', 'gcr.io/$PROJECT_ID/app:test', '-t', 'gcr.io/$PROJECT_ID/app:test', '.']
+  args: ['build', '-t', 'gcr.io/$alaric-365111/myapp:v1', '.']
+  timeout: 180s
+
+#Push the image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '--target', 'check', '--cache-from', 'gcr.io/$PROJECT_ID/app:check', '-t', 'gcr.io/$PROJECT_ID/app:check', '.']
-  waitFor: ['-']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '--cache-from', 'garethr/app', '-t', 'gcr.io/$PROJECT_ID/app', '.']
-- name: 'gcr.io/gcp-runtimes/container-structure-test'
-  args: ['test', '--image', 'gcr.io/$PROJECT_ID/app', '--config', 'structure-tests.yaml']
-images: ['gcr.io/$PROJECT_ID/app', 'gcr.io/$PROJECT_ID/app:test', 'gcr.io/$PROJECT_ID/app:check']
+  args: ['push', 'gcr.io/$alaric-365111/myapp:v1']
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: "bash"
+  args:
+  - "-c"
+  - |
+    echo "Docker Container Built"
+    ls -la
+    ls -al models/
+# deploy container image to GKE
+- name: "gcr.io/cloud-builders/gke-deploy"
+  args:
+  - run
+  - --filename=K8s/
+  - --image=gcr.io/$alaric-365111/myapp:v1
+  - --location=us-west1-b
+  - --cluster=mykube
