@@ -1,80 +1,11 @@
-
- steps:
- - name: 'gcr.io/cloud-builders/docker'
-   args: ['build', '-t', 'gcr.io/$PROJECT_ID/myapp:v1', '.']
-   timeout: 180s
-# #Push the image
-# - name: 'gcr.io/cloud-builders/docker'
-#   args: ['push', 'gcr.io/$PROJECT_ID/myapp:v1']
-
-# - name: 'gcr.io/cloud-builders/gcloud'
-#   entrypoint: "bash"
-#   args:
-#   - "-c"
-#   - |
-#     echo "Docker Container Built"
-#     ls -la
-#     ls -al models/
-# # deploy container image to GKE
-# - name: "gcr.io/cloud-builders/gke-deploy"
-#   args:
-#   - run
-#   - --filename=K8s/
-#   - --image=gcr.io/$PROJECT_ID/myapp:v1
-#   - --location=us-west1-b
-#   - --cluster=mykube
-
-
-# steps:
-# #Build the image
-#  steps:
-#  - name: 'gcr.io/cloud-builders/docker'
-#    entrypoint: 'bash'
-#    args: ['-c', 'docker login --username=$$USERNAME --password=$$PASSWORD']
-#    secretEnv: ['USERNAME', 'PASSWORD']
-#  - name: "gcr.io/cloud-builders/docker"
-#    entrypoint: 'bash'
-#    args: ['-c', 'docker run $$us1313/utsav13:latest']
-#    secretEnv: ['USERNAME']
-#  availableSecrets:
-#    secretManager:
-#    - versionName: projects/alaric-365111/secrets/docker-password/versions/1
-#      env: 'PASSWORD'
-#    - versionName: projects/alaric-365111/secrets/docker-username/versions/1
-#      env: 'USERNAME'
-# - name: 'python/cloud-builders/docker'
-#   args: ['build', '-t', 'python/$PROJECT_ID/myapp:v1', '.']
-#   timeout: 180s
-
-# #Push the image
-# - name: 'python/cloud-builders/docker'
-#   args: ['push', 'python/$PROJECT_ID/myapp:v1']
-
-# - name: 'python/cloud-builders/gcloud'
-#   entrypoint: "bash"
-#   args:
-#   - "-c"
-#   - |
-#     echo "Docker Container Built"
-#     ls -la
-#     ls -al models/
-# # deploy container image to GKE
-# - name: "python/cloud-builders/gke-deploy"
-#   args:
-#   - run
-#   - --filename=K8s/
-#   - --image=python/$PROJECT_ID/myapp:v1
-#   - --location=us-west1-b
-#   - --cluster=mykube
-
- 
-#  steps:
-# - name: 'gcr.io/cloud-builders/docker'
-#   args: ['build', '-t', 'gcr.io/$PROJECT_ID/alaric/myapp:v1', '.']
-# #   # Build the container image
-# # - name: "gcr.io/cloud-builders/docker"
-# #   args: ['build', '-t', 'gcr.io/images/alaric/alaric-365111/myapp:v1', '.']
-# #  timeout: 180s
-# #       #Push the image
-# # - name: 'gcr.io/images/alaric-365111'
-# #   args: ['push', 'gcr.io/$PROJECT_ID/myapp:v1']
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '--target', 'test', '--cache-from', 'gcr.io/$PROJECT_ID/app:test', '-t', 'gcr.io/$PROJECT_ID/app:test', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '--target', 'check', '--cache-from', 'gcr.io/$PROJECT_ID/app:check', '-t', 'gcr.io/$PROJECT_ID/app:check', '.']
+  waitFor: ['-']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '--cache-from', 'garethr/app', '-t', 'gcr.io/$PROJECT_ID/app', '.']
+- name: 'gcr.io/gcp-runtimes/container-structure-test'
+  args: ['test', '--image', 'gcr.io/$PROJECT_ID/app', '--config', 'structure-tests.yaml']
+images: ['gcr.io/$PROJECT_ID/app', 'gcr.io/$PROJECT_ID/app:test', 'gcr.io/$PROJECT_ID/app:check']
