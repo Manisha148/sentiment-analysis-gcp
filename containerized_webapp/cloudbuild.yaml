@@ -1,19 +1,12 @@
 steps:
 #Build the image
-# - name: 'gcr.io/cloud-builders/docker'
-#   args: ['build', '-t', 'abc:v1', '.']
-#   timeout: 180s
 - name: 'gcr.io/cloud-builders/docker'
-  args: [
-            'build',
-            '-t', 'gcr.io/$PROJECT_ID/abc:latest',
-            '--cache-from', 'gcr.io/$PROJECT_ID/abc:latest',
-            '.'
-        ]
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/myapp:v1', '.']
+  timeout: 180s
 
 #Push the image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'abc:v1']
+  args: ['push', 'gcr.io/$PROJECT_ID/myapp:v1']
 
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: "bash"
