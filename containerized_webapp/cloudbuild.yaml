@@ -70,9 +70,9 @@
       [
         "build",
         "-t",
-        "gcr.io/my-project/github.com/username/project.com:$COMMIT_SHA",
+        "gcr.io/images/alaric-365111",
         ".",
       ]
       #Push the image
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'gcr.io/images/alaric-365111'
   args: ['push', 'gcr.io/$PROJECT_ID/myapp:v1']
