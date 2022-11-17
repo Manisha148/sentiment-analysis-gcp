@@ -25,9 +25,9 @@
 - name: "gcr.io/cloud-builders/docker"
   args:
   - build
-  - "--tag=gcr.io/alaric-365111/quickstart-image"
+  - "--tag=gcr.io/alaric-365111/test"
   - "--file=.containerized_webapp/Dockerfile"
   - .
 ...
 images:
-- "gcr.io/alaric365111/quickstart-image"
+- "gcr.io/alaric365111/test"
