@@ -75,4 +75,4 @@
       ]
       #Push the image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/d77df283e1f0:latest']
+  args: ['push', 'gcr.io/$PROJECT_ID/myapp:v1']
