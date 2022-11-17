@@ -1,26 +1,23 @@
 steps:
-#Build the image
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$alaric-365111/myapp:v1', '.']
-  timeout: 180s
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 
+           'us-central1-docker.pkg.dev/${alaric-365111}/my-docker-repo/myimage', 
+           '.']
 
-#Push the image
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$alaric-365111/myapp:v1']
+  # Docker Push
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 
+           'us-central1-docker.pkg.dev/${alaric-365111}/my-docker-repo/myimage']
 
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: "bash"
-  args:
-  - "-c"
-  - |
-    echo "Docker Container Built"
-    ls -la
-    ls -al models/
-# deploy container image to GKE
-- name: "gcr.io/cloud-builders/gke-deploy"
-  args:
-  - run
-  - --filename=K8s/
-  - --image=gcr.io/$alaric-365111/myapp:v1
-  - --location=us-west1-b
-  - --cluster=mykube
+  # Entrypoint, timeout and environment variables
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    timeout: 240s
+    args: ['compute', 'instances', 
+           'create-with-container', 'my-vm-name',
+           '--container-image', 
+           'us-central1-docker.pkg.dev/${alaric-365111}/my-docker-repo/myimage']
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=us-central1'
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
