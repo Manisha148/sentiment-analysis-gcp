@@ -64,15 +64,15 @@
 #   - --cluster=mykube
 
  steps:
-#   # Build the container image
-#   - name: "gcr.io/cloud-builders/docker"
-#     args:
-#       [
-#         "build",
-#         "-t",
-#         "gcr.io/my-project/github.com/username/project.com:$COMMIT_SHA",
-#         ".",
-#       ]
+  # Build the container image
+  - name: "gcr.io/images/alaric-365111"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/my-project/github.com/username/project.com:$COMMIT_SHA",
+        ".",
+      ]
       #Push the image
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/$PROJECT_ID/d77df283e1f0:latest']
