@@ -1,4 +1,8 @@
 
+ steps:
+ - name: 'python/cloud-builders/docker'
+   args: ['build', '-t', 'python/$PROJECT_ID/myapp:v1', '.']
+   timeout: 180s
 # #Push the image
 # - name: 'gcr.io/cloud-builders/docker'
 #   args: ['push', 'gcr.io/$PROJECT_ID/myapp:v1']
@@ -64,13 +68,13 @@
 #   - --cluster=mykube
 
  
- steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/alaric/myapp:v1', '.']
-#   # Build the container image
-# - name: "gcr.io/cloud-builders/docker"
-#   args: ['build', '-t', 'gcr.io/images/alaric/alaric-365111/myapp:v1', '.']
-# #   timeout: 180s
-#       #Push the image
-# - name: 'gcr.io/images/alaric-365111'
-#   args: ['push', 'gcr.io/$PROJECT_ID/myapp:v1']
+#  steps:
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: ['build', '-t', 'gcr.io/$PROJECT_ID/alaric/myapp:v1', '.']
+# #   # Build the container image
+# # - name: "gcr.io/cloud-builders/docker"
+# #   args: ['build', '-t', 'gcr.io/images/alaric/alaric-365111/myapp:v1', '.']
+# #  timeout: 180s
+# #       #Push the image
+# # - name: 'gcr.io/images/alaric-365111'
+# #   args: ['push', 'gcr.io/$PROJECT_ID/myapp:v1']
