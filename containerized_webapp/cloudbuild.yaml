@@ -1,67 +1,67 @@
-#  steps:
+ steps:
+ - name: 'gcr.io/cloud-builders/docker'
+   entrypoint: 'bash'
+   args: ['-c', 'docker login --username=$$USERNAME --password=$$PASSWORD']
+   secretEnv: ['USERNAME', 'PASSWORD']
+#  - name: "gcr.io/cloud-builders/docker"
+#    entrypoint: 'bash'
+#    args: ['-c', 'docker run $$USERNAME/test1:22']
+#    secretEnv: ['USERNAME']
+ - name: 'gcr.io/cloud-builders/docker'
+   entrypoint: 'bash'
+   args: ['-c', 'docker run -t /containerized_webapp/dockerfile .']
+#    secretEnv: ['USERNAME']
 #  - name: 'gcr.io/cloud-builders/docker'
 #    entrypoint: 'bash'
-#    args: ['-c', 'docker login --username=$$USERNAME --password=$$PASSWORD']
-#    secretEnv: ['USERNAME', 'PASSWORD']
-# #  - name: "gcr.io/cloud-builders/docker"
-# #    entrypoint: 'bash'
-# #    args: ['-c', 'docker run $$USERNAME/test1:22']
-# #    secretEnv: ['USERNAME']
-#  - name: 'gcr.io/cloud-builders/docker'
-#    entrypoint: 'bash'
-#    args: ['-c', 'docker run -t /containerized_webapp/dockerfile .']
-# #    secretEnv: ['USERNAME']
-# #  - name: 'gcr.io/cloud-builders/docker'
-# #    entrypoint: 'bash'
-# #    args: ['-c', 'docker push $$USERNAME/test1:22']
-# #    secretEnv: ['USERNAME']
-#  availableSecrets:
-#    secretManager:
-#    - versionName: projects/alaric-365111/secrets/docker-password/versions/1
-#      env: 'PASSWORD'
-#    - versionName: projects/alaric-365111/secrets/docker-username/versions/1
-#      env: 'USERNAME'
-# #      steps:
-# # - name: "gcr.io/cloud-builders/docker"
-# #   args:
-# #   - build
-# #   - "--tag=gcr.io/alaric-365111/test"
-# #   - "--file=.containerized_webapp/Dockerfile"
-# #   - .
-# # ...
-# # images:
-# # - "gcr.io/alaric365111/test"
-steps:
-  # Run tests and save to file
-  - name: golang:1.19
-    entrypoint: /bin/bash
-    args: 
-      - -c
-      - |
-        go install github.com/jstemmer/go-junit-report/v2@latest
-        2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml
+#    args: ['-c', 'docker push $$USERNAME/test1:22']
+#    secretEnv: ['USERNAME']
+ availableSecrets:
+   secretManager:
+   - versionName: projects/alaric-365111/secrets/docker-password/versions/1
+     env: 'PASSWORD'
+   - versionName: projects/alaric-365111/secrets/docker-username/versions/1
+     env: 'USERNAME'
+#      steps:
+# - name: "gcr.io/cloud-builders/docker"
+#   args:
+#   - build
+#   - "--tag=gcr.io/alaric-365111/test"
+#   - "--file=.containerized_webapp/Dockerfile"
+#   - .
+# ...
+# images:
+# - "gcr.io/alaric365111/test"
+# steps:
+#   # Run tests and save to file
+#   - name: golang:1.19
+#     entrypoint: /bin/bash
+#     args: 
+#       - -c
+#       - |
+#         go install github.com/jstemmer/go-junit-report/v2@latest
+#         2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml
 
   # Docker Build
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 
-           'us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/myimage:$SHORT_SHA', '.']
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['build', '-t', 
+#            'us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/myimage:$SHORT_SHA', '.']
 
-  # Docker push to Google Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/myimage:$SHORT_SHA']
+#   # Docker push to Google Artifact Registry
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/myimage:$SHORT_SHA']
 
-  # Deploy to Cloud Run
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['run', 'deploy', 'helloworld-${SHORT_SHA}', 
-           '--image=us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/myimage:$SHORT_SHA', 
-           '--region', 'us-central1', '--platform', 'managed']
+#   # Deploy to Cloud Run
+#   - name: 'gcr.io/cloud-builders/gcloud'
+#     args: ['run', 'deploy', 'helloworld-${SHORT_SHA}', 
+#            '--image=us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/myimage:$SHORT_SHA', 
+#            '--region', 'us-central1', '--platform', 'managed']
 
-# Save test logs to Google Cloud Storage
-artifacts:
-  objects:
-    location: gs://$_BUCKET_NAME/
-    paths:
-      - ${SHORT_SHA}_test_log.xml
-# Store images in Google Artifact Registry
-images:
-  - us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/myimage:$SHORT_SHA
+# # Save test logs to Google Cloud Storage
+# artifacts:
+#   objects:
+#     location: gs://$_BUCKET_NAME/
+#     paths:
+#       - ${SHORT_SHA}_test_log.xml
+# # Store images in Google Artifact Registry
+# images:
+#   - us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/myimage:$SHORT_SHA
